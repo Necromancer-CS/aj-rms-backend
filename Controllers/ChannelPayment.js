@@ -12,7 +12,6 @@ exports.list = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
-
 //  ค้นหาข้อมูลเฉพาะที่ส่ง ID ไป
 exports.read = async (req, res) => {
   try {
