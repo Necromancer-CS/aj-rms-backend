@@ -8,14 +8,14 @@ const {
   updateBilling,
   list,
   remove,
-} = require("../Controllers/Billing");
+} = require("../../Controllers/Billing");
 
 //http://localhost:5000/api/billing
 //API สำหรับ UI ในส่วน Flow การทำงาน
-router.get("/billing", listBilling);
-router.get("/billing/:id", readBilling);
-router.post("/billing", createBilling);
-router.put("/billing/:id", updateBilling);
+router.get("/", listBilling);
+router.get("/:id", readBilling);
+router.post("", createBilling);
+router.put("/:id", updateBilling);
 
 //http://localhost:5000/api/billing-control
 //API สำหรับ UI ในส่วน จัดการข้อมูล billing
