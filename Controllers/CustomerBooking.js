@@ -46,7 +46,7 @@ exports.createCustomerBooking = async (req, res) => {
     var packagePrice = buffetItem.packagePrice;
     var totalPrice = packagePrice * countPerson;
     const DataItem = {
-      customerBookingId: dataBilling.customerBookingId,
+      customerBookingId: _id,
       deskNo: dataBilling.deskNo,
       countPerson: countPerson,
       packagePrice: packagePrice,

@@ -20,7 +20,7 @@ exports.readBilling = async (req, res) => {
   try {
     //  code
     const id = req.params.id;
-    const billing = await Billing.find({ _id: id }).exec();
+    const billing = await Billing.find({ customerBookingId: id }).exec();
     res.send(billing);
   } catch (error) {
     //  error
