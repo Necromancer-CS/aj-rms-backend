@@ -116,29 +116,3 @@ exports.topMenu = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
-
-// exports.topMenu = async (req, res) => {
-//   try {
-//     const topMenus = await CustomerOrderMenu.aggregate([
-//       { $match: { status: "served" } }, // กรองเฉพาะข้อมูลที่มี status เป็น "completed"
-//       { $group: { _id: "$menuId", count: { $sum: 1 } } }, // นับจำนวนการเลือกแต่ละเมนู
-//       { $sort: { count: -1 } }, // เรียงลำดับจำนวนการเลือกจากมากไปน้อย
-//       { $limit: 5 }, // จำกัดให้เอกสารผลลัพธ์เป็น 5 เมนูเท่านั้น
-//     ]);
-
-//     const topMenuIds = topMenus.map((menu) => menu._id); // ดึงเฉพาะ _id ของเมนูจากผลลัพธ์ที่ได้
-
-//     const menus = await Menu.find({ _id: { $in: topMenuIds } }).exec(); // ดึงข้อมูลเมนูที่มี _id ใน topMenuIds
-
-//     const topMenuDetails = topMenus.map((menu, index) => ({
-//       _id: menus[index]._id,
-//       name: menus[index].menuName,
-//       count: menu.count,
-//     }));
-
-//     res.send(topMenuDetails);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send("Server Error");
-//   }
-// };
