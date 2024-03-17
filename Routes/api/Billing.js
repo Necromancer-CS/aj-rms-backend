@@ -6,8 +6,6 @@ const {
   readBilling,
   createBilling,
   updateBilling,
-  list,
-  remove,
 } = require("../../Controllers/Billing");
 
 //http://localhost:5000/api/billing
@@ -16,10 +14,5 @@ router.get("/", listBilling);
 router.get("/:id", readBilling);
 router.post("", createBilling);
 router.put("/:id", updateBilling);
-
-//http://localhost:5000/api/billing-control
-//API สำหรับ UI ในส่วน จัดการข้อมูล billing
-router.get("/billing-control", list);
-router.delete("/billing-control/:id", remove);
 
 module.exports = router;

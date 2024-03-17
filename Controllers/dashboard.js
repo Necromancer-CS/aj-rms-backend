@@ -88,29 +88,29 @@ exports.topPackage = async (req, res) => {
 
 exports.topMenu = async (req, res) => {
   try {
-    const topMenu = await CustomerOrderMenu.aggregate([
+    const topMenus = await CustomerOrderMenu.aggregate([
       { $match: { status: "served" } }, // กรองเฉพาะข้อมูลที่มี status เป็น "completed"
-      { $group: { _id: "$menuId", count: { $sum: 1 } } }, // นับจำนวนการเลือกแต่ละแพ็คเกจ
+      { $group: { _id: "$menuId", count: { $sum: 1 } } }, // นับจำนวนการเลือกแต่ละเมนู
       { $sort: { count: -1 } }, // เรียงลำดับจำนวนการเลือกจากมากไปน้อย
-      { $limit: 1 }, // จำกัดให้เอกสารผลลัพธ์เป็นเพียงหนึ่งเอกสาร
+      { $limit: 5 }, // จำกัดให้เอกสารผลลัพธ์เป็น 5 เมนูเท่านั้น
     ]);
 
-    let dataMenuId = null; // กำหนดค่าเริ่มต้นให้เป็น null
+    const totalOrderedMenus = topMenus.reduce(
+      (accumulator, menu) => accumulator + menu.count,
+      0
+    ); // คำนวณจำนวนเมนูที่ถูกสั่งทั้งหมด
 
-    if (topMenu.length > 0) {
-      dataMenuId = topMenu[0]._id; // เก็บค่า packageId ของ topPackage ลงใน dataPackageId
-    }
+    const topMenuIds = topMenus.map((menu) => menu._id); // ดึงเฉพาะ _id ของเมนูจากผลลัพธ์ที่ได้
 
-    const menus = await Menu.findOne({ _id: dataMenuId }).exec();
+    const menus = await Menu.find({ _id: { $in: topMenuIds } }).exec(); // ดึงข้อมูลเมนูที่มี _id ใน topMenuIds
 
-    if (topMenu.length > 0) {
-      res.send({
-        topMenu: menus.menuName,
-        count: topMenu[0].count,
-      }); // ส่งชื่อแพ็คเกจที่มีการเลือกมากที่สุดกลับไป
-    } else {
-      res.send({ topMenu: null }); // ถ้าไม่มีข้อมูลให้ส่งค่า null กลับไป
-    }
+    const topMenuDetails = topMenus.map((menu, index) => ({
+      _id: menus[index]._id,
+      name: menus[index].menuName,
+      count: menu.count,
+    }));
+
+    res.send({ topMenuDetails, totalOrderedMenus }); // ส่งข้อมูล topMenuDetails และ totalOrderedMenus กลับไป
   } catch (error) {
     console.log(error);
     res.status(500).send("Server Error");
