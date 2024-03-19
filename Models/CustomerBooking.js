@@ -2,16 +2,19 @@ const mongoose = require("mongoose");
 
 const customerBookingSchema = mongoose.Schema(
   {
-    customerName: {
-      type: String,
-    },
     qrLink: {
       type: String,
     },
     deskNo: {
       type: String,
     },
-    countPerson: {
+    countAdult: {
+      type: Number,
+    },
+    countChildreng: {
+      type: Number,
+    },
+    countChild: {
       type: Number,
     },
     packageId: {

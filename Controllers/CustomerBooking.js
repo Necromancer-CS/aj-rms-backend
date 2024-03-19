@@ -41,14 +41,24 @@ exports.createCustomerBooking = async (req, res) => {
     // ส่วนสร้าง Billing
     var dataBilling = req.body;
     var packageId = req.body.packageId;
-    var countPerson = req.body.countPerson;
+    var countAdult = req.body.countAdult; //จำนวนผู้ใหญ่
+    var countChildreng = req.body.countChildreng; //จำนวนเด็กที่ต้องจ่ายเงิน / 2
+    var countChild = req.body.countChild; //จำนวนเด็กที่ไม่ต้องจ่ายเงิน
     const buffetItem = await Buffet.findOne({ _id: packageId }).exec();
-    var packagePrice = buffetItem.packagePrice;
-    var totalPrice = packagePrice * countPerson;
+    var packagePrice = buffetItem.packagePrice; //ราคาแพ็กเกรด
+    var packagePriceChildreng = packagePrice / 2; //ราคาแพ็กเกรดของเด็ก
+
+    var totalAdult = packagePrice * countAdult; //ราคารวมผู้ใหญ่
+    var totalChildreng = packagePriceChildreng * countChildreng; //ราคารวมเด็กที่ต้องจ่ายเงิน
+    var totalChild = countChild * 0; //ราคารวมเด็กที่ไม่ต้องจ่ายเงิน
+    var totalPrice = totalAdult + totalChildreng + totalChild;
+
     const DataItem = {
       customerBookingId: _id,
       deskNo: dataBilling.deskNo,
-      countPerson: countPerson,
+      countAdult: countAdult,
+      countChildreng: countChildreng,
+      countChild: countChild,
       packagePrice: packagePrice,
       totalPrice: totalPrice,
     };
@@ -80,7 +90,9 @@ exports.readCustomerBooking = async (req, res) => {
       customerName: customerBooking.customerName,
       qrLink: customerBooking._id,
       deskNo: customerBooking.deskNo,
-      countPerson: customerBooking.countPerson,
+      countAdult: customerBooking.countAdult,
+      countChildreng: customerBooking.countChildreng,
+      countChild: customerBooking.countChild,
       packageId: customerBooking.packageId,
       packageName: packageItem.packageName,
       status: customerBooking.status,
