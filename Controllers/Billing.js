@@ -48,11 +48,13 @@ exports.updateBilling = async (req, res) => {
   try {
     // code
     const id = req.params.id;
-    const newDataIsPaid = req.body.isPaid;
-    const billing = await Billing.findOneAndUpdate(
-      { _id: id },
-      { $set: { isPaid: newDataIsPaid } },
-      { new: true }
+    const newData = req.body;
+    const billingUpdate = await Billing.findOneAndUpdate(
+      { customerBookingId: id },
+      newData,
+      {
+        new: true,
+      }
     ).exec();
 
     const updateStatusCustomerBooking = "completed";
@@ -78,7 +80,7 @@ exports.updateBilling = async (req, res) => {
       },
       { new: true }
     );
-    res.send(billing);
+    res.send(billingUpdate);
   } catch (error) {
     // error
     console.log(error);
