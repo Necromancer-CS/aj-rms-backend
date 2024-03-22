@@ -5,9 +5,6 @@ const {
   createCustomerBooking,
   readCustomerBooking,
   updateStatus,
-  list,
-  update,
-  remove,
 } = require("../../Controllers/CustomerBooking");
 
 //http://localhost:5000/api/customer-booking
@@ -15,10 +12,5 @@ const {
 router.post("/", createCustomerBooking);
 router.get("/:id", readCustomerBooking);
 router.put("/:id", updateStatus);
-
-//API สำหรับ UI ในส่วน จัดการข้อมูล customerBooking
-router.get("/customer-booking-control", list);
-router.put("/customer-booking-control/:id", update);
-router.delete("/customer-booking-control/:id", remove);
 
 module.exports = router;

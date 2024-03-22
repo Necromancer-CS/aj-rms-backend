@@ -10,15 +10,26 @@ const customerBookingSchema = mongoose.Schema(
     },
     countAdult: {
       type: Number,
+      default: 0,
     },
     countChildreng: {
       type: Number,
+      default: 0,
     },
     countChild: {
       type: Number,
+      default: 0,
     },
     packageId: {
       type: String,
+    },
+    chanelPayment: {
+      type: String,
+      default: "N",
+    },
+    file: {
+      type: String,
+      default: "noimage.jpg",
     },
     status: {
       type: String,

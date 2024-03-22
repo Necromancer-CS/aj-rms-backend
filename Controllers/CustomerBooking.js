@@ -51,7 +51,6 @@ exports.createCustomerBooking = async (req, res) => {
     var totalAdult = packagePrice * countAdult; //ราคารวมผู้ใหญ่
     var totalChildreng = packagePriceChildreng * countChildreng; //ราคารวมเด็กที่ต้องจ่ายเงิน
     var totalChild = countChild * 0; //ราคารวมเด็กที่ไม่ต้องจ่ายเงิน
-    var totalPrice = totalAdult + totalChildreng + totalChild;
 
     const DataItem = {
       customerBookingId: _id,
@@ -60,7 +59,6 @@ exports.createCustomerBooking = async (req, res) => {
       countChildreng: countChildreng,
       countChild: countChild,
       packagePrice: packagePrice,
-      totalPrice: totalPrice,
     };
     await Billing(DataItem).save();
 
