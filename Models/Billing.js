@@ -8,7 +8,13 @@ const billingSchema = mongoose.Schema(
     deskNo: {
       type: String,
     },
-    countPerson: {
+    countAdult: {
+      type: Number,
+    },
+    countChildreng: {
+      type: Number,
+    },
+    countChild: {
       type: Number,
     },
     packagePrice: {

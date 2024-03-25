@@ -21,19 +21,6 @@ exports.listPackageIdMenu = async (req, res) => {
 };
 
 //API สำหรับ UI ในส่วน จัดการข้อมูล billing
-//  ค้นหาข้อมูลทั้งหมด
-// exports.list = async (req, res) => {
-//   try {
-//     // code
-//     const menu = await Menu.find({}).exec();
-//     // const buffetItem = await Buffet.fileole({ _id: menu.packageBufferId });
-//     res.send(menu);
-//   } catch (error) {
-//     // error
-//     console.log(error);
-//     res.status(500).send("Server Error");
-//   }
-// };
 exports.list = async (req, res) => {
   try {
     // ค้นหาข้อมูล Menu ทั้งหมด
@@ -87,8 +74,10 @@ exports.create = async (req, res) => {
     if (req.file) {
       dataMenu.file = req.file.filename;
     }
-    const menu = await Menu(dataMenu).save();
-    res.send(menu);
+    res.send(dataMenu);
+
+    // const menu = await Menu(dataMenu).save();
+    // res.send(menu);
   } catch (error) {
     // error
     console.log(error);

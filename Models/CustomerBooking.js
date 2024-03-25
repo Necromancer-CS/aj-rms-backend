@@ -2,20 +2,34 @@ const mongoose = require("mongoose");
 
 const customerBookingSchema = mongoose.Schema(
   {
-    customerName: {
-      type: String,
-    },
     qrLink: {
       type: String,
     },
     deskNo: {
       type: String,
     },
-    countPerson: {
+    countAdult: {
       type: Number,
+      default: 0,
+    },
+    countChildreng: {
+      type: Number,
+      default: 0,
+    },
+    countChild: {
+      type: Number,
+      default: 0,
     },
     packageId: {
       type: String,
+    },
+    chanelPayment: {
+      type: String,
+      default: "N",
+    },
+    file: {
+      type: String,
+      default: "noimage.jpg",
     },
     status: {
       type: String,

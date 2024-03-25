@@ -10,11 +10,11 @@ POST /customer-booking
 
 PAYLOAD
 {
-    "countPerson": "",
-    "customerName": "",
-    "packageId" : "",
-    "deskNo" : "",
-    "qrLink" : ""
+    "countAdult": //Number
+    "countChildreng": //Number
+    "countChild": //Number
+    "packageId" : //String
+    "deskNo" : //String
 }
 
 ```
