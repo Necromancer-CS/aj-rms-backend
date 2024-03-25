@@ -21,50 +21,36 @@ exports.listPackageIdMenu = async (req, res) => {
 };
 
 //API สำหรับ UI ในส่วน จัดการข้อมูล billing
-//  ค้นหาข้อมูลทั้งหมด
 exports.list = async (req, res) => {
   try {
-    // code
-    const menu = await Menu.find({}).exec();
-    // const buffetItem = await Buffet.fileole({ _id: menu.packageBufferId });
-    res.send(menu);
+    // ค้นหาข้อมูล Menu ทั้งหมด
+    const menus = await Menu.find({}).exec();
+
+    // สร้าง array เพื่อเก็บข้อมูลที่จะส่งกลับ
+    let responseData = [];
+
+    // วนลูปผ่านข้อมูลของแต่ละเมนู
+    for (const menu of menus) {
+      // ค้นหาข้อมูล Buffet โดยใช้ packageBufferId จากเมนูปัจจุบัน
+      const buffet = await Buffet.findOne({ _id: menu.packageBufferId }).exec();
+
+      // สร้างข้อมูลใหม่ที่รวมข้อมูลจากทั้งสองตาราง
+      const responseDataItem = {
+        _id: menu._id,
+        menuName: menu.menuName,
+        menuPrice: menu.menuPrice,
+        menuStatus: menu.menuStatus,
+        menuType: menu.menuType,
+        packageName: buffet.packageName,
+      };
+      responseData.push(responseDataItem);
+    }
+    res.send(responseData);
   } catch (error) {
-    // error
     console.log(error);
     res.status(500).send("Server Error");
   }
 };
-
-// exports.list = async (req, res) => {
-//   try {
-//     // ค้นหาข้อมูล Menu ทั้งหมด
-//     const menus = await Menu.find({}).exec();
-
-//     // สร้าง array เพื่อเก็บข้อมูลที่จะส่งกลับ
-//     let responseData = [];
-
-//     // วนลูปผ่านข้อมูลของแต่ละเมนู
-//     for (const menu of menus) {
-//       // ค้นหาข้อมูล Buffet โดยใช้ packageBufferId จากเมนูปัจจุบัน
-//       const buffet = await Buffet.findOne({ _id: menu.packageBufferId }).exec();
-
-//       // สร้างข้อมูลใหม่ที่รวมข้อมูลจากทั้งสองตาราง
-//       const responseDataItem = {
-//         _id: menu._id,
-//         menuName: menu.menuName,
-//         menuPrice: menu.menuPrice,
-//         menuStatus: menu.menuStatus,
-//         menuType: menu.menuType,
-//         packageName: buffet.packageName,
-//       };
-//       responseData.push(responseDataItem);
-//     }
-//     res.send(responseData);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send("Server Error");
-//   }
-// };
 
 //  ค้นหาข้อมูลเฉพาะที่ส่ง ID ไป
 exports.read = async (req, res) => {
