@@ -44,12 +44,13 @@ exports.totalOpenDesk = async (req, res) => {
 
 exports.totalPrice = async (req, res) => {
   try {
-    const billings = await Billing.find({ isPaid: false }).exec();
+    const billings = await Billing.find({ isPaid: true }).exec();
     let total = 0;
     for (const billing of billings) {
       total += billing.totalPrice;
     }
     res.send({ total });
+    // res.send(billings);
   } catch (error) {
     console.log(error);
     res.status(500).send("Server Error");
@@ -95,7 +96,12 @@ exports.topMenu = async (req, res) => {
       { $limit: 5 }, // จำกัดให้เอกสารผลลัพธ์เป็น 5 เมนูเท่านั้น
     ]);
 
-    const totalOrderedMenus = topMenus.reduce(
+    const topMenusAll = await CustomerOrderMenu.aggregate([
+      { $match: { status: "served" } }, // กรองเฉพาะข้อมูลที่มี status เป็น "completed"
+      { $group: { _id: "$menuId", count: { $sum: 1 } } }, // นับจำนวนการเลือกแต่ละเมนู
+    ]);
+
+    const totalOrderedMenus = topMenusAll.reduce(
       (accumulator, menu) => accumulator + menu.count,
       0
     ); // คำนวณจำนวนเมนูที่ถูกสั่งทั้งหมด
