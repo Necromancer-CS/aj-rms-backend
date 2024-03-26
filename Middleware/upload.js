@@ -1,7 +1,7 @@
 const { log } = require("console");
 const multer = require("multer");
 const path = require("path");
-const pathToUpload = path.join(process.cwd(), "../uploads");
+const pathToUpload = path.join(process.cwd(), "/tmp");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
