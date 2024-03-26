@@ -91,15 +91,9 @@ exports.update = async (req, res) => {
     const id = req.params.id;
     var newDataMenu = req.body;
 
-    if (typeof req.file !== "undefined") {
-      newDataMenu.file = req.file.filename;
-      await fs.unlink("./uploads/" + newDataMenu.fileole, (error) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Remove success");
-        }
-      });
+    if (req.file) {
+      const base64Image = req.file.buffer.toString("base64");
+      newDataMenu.file = `data:${req.file.mimetype};base64,${base64Image}`;
     }
     const menu = await Menu.findOneAndUpdate({ _id: id }, newDataMenu, {
       new: true,
