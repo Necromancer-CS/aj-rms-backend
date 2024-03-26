@@ -3,7 +3,7 @@ const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     try {
-      cb(null, "./uploads/");
+      cb(null, process.cwd() + "./uploads/");
     } catch (error) {
       console.log("past Upload");
       console.log(error);
