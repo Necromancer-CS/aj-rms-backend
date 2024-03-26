@@ -74,10 +74,8 @@ exports.create = async (req, res) => {
     if (req.file) {
       dataMenu.file = req.file.filename;
     }
-    res.send(dataMenu);
-
-    // const menu = await Menu(dataMenu).save();
-    // res.send(menu);
+    const menu = await Menu(dataMenu).save();
+    res.send(menu);
   } catch (error) {
     // error
     console.log(error);
