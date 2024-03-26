@@ -4,6 +4,7 @@ const pathToUpload = path.join(process.cwd(), "/uploads");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+<<<<<<< HEAD
     try {
       cb(null, pathToUpload);
     } catch (error) {
@@ -19,6 +20,13 @@ const storage = multer.diskStorage({
       console.log("past Image");
       console.log(error);
     }
+=======
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, "RSDB-" + uniqueSuffix + file.originalname);
+>>>>>>> c35a3da8b4cd09b2cdff789dcc5b73f77384b747
   },
 });
 
