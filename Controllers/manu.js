@@ -73,7 +73,8 @@ exports.create = async (req, res) => {
     // code
     var dataMenu = req.body;
     if (req.file) {
-      dataMenu.file = req.file.filename;
+      const base64Image = req.file.buffer.toString("base64");
+      dataMenu.file = `data:${req.file.mimetype};base64,${base64Image}`;
     }
     const menu = await Menu(dataMenu).save();
     res.send(menu);
