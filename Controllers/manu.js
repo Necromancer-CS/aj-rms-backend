@@ -82,7 +82,7 @@ exports.create = async (req, res) => {
     // error
     console.log(error);
     res.json({ status: "Faile", text: JSON.stringify(error) });
-    res.status(500).send("Server Error");
+    // res.status(500).send("Server Error");
   }
 };
 
