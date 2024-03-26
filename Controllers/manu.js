@@ -2,6 +2,7 @@ const Menu = require("../Models/Menu");
 const CustomerBooking = require("../Models/CustomerBooking");
 const Buffet = require("../Models/Buffet");
 const fs = require("fs");
+const { text } = require("body-parser");
 
 //API สำหรับ UI ในส่วน Flow การทำงาน
 exports.listPackageIdMenu = async (req, res) => {
@@ -80,7 +81,7 @@ exports.create = async (req, res) => {
   } catch (error) {
     // error
     console.log(error);
-    res.json({ status: "Faile" });
+    res.json({ status: "Faile", text: JSON.stringify(error) });
     res.status(500).send("Server Error");
   }
 };
