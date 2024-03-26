@@ -1,9 +1,11 @@
 const multer = require("multer");
+const path = require("path");
+const pathToUpload = path.join(process.cwd(), "uploads");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     try {
-      cb(null, process.cwd() + "./uploads/");
+      cb(null, pathToUpload);
     } catch (error) {
       console.log("past Upload");
       console.log(error);
