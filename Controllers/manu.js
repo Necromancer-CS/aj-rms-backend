@@ -74,11 +74,13 @@ exports.create = async (req, res) => {
     if (req.file) {
       dataMenu.file = req.file.filename;
     }
-    const menu = await Menu(dataMenu).save();
-    res.send(menu);
+    res.json({ status: "success" });
+    // const menu = await Menu(dataMenu).save();
+    // res.send(menu);
   } catch (error) {
     // error
     console.log(error);
+    res.json({ status: "Faile" });
     res.status(500).send("Server Error");
   }
 };
