@@ -113,15 +113,11 @@ exports.remove = async (req, res) => {
     const id = req.params.id;
     const menu = await Menu.findOneAndDelete({ _id: id }).exec();
 
-    if (menu?.file) {
-      await fs.unlink("./uploads/" + menu.file, (error) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Remove success");
-        }
-      });
+    if (req.file) {
+      const base64Image = req.file.buffer.toString("base64");
+      newDataMenu.file = `data:${req.file.mimetype};base64,${base64Image}`;
     }
+
     res.send(menu);
   } catch (error) {
     // error
