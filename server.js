@@ -13,7 +13,8 @@ connectDB();
 app.use(morgan("dev"));
 app.use(cors());
 app.use(bodyParse.json({ limit: "10mb" }));
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 readdirSync("./Routes").map((r) => app.use("/api", require("./Routes/" + r)));
 
