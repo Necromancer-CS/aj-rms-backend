@@ -2,6 +2,7 @@ const Menu = require("../Models/Menu");
 const CustomerBooking = require("../Models/CustomerBooking");
 const Buffet = require("../Models/Buffet");
 const fs = require("fs");
+const { text } = require("body-parser");
 
 //API สำหรับ UI ในส่วน Flow การทำงาน
 exports.listPackageIdMenu = async (req, res) => {
@@ -72,14 +73,14 @@ exports.create = async (req, res) => {
     // code
     var dataMenu = req.body;
     if (req.file) {
-      dataMenu.file = req.file.filename;
+      const base64Image = req.file.buffer.toString("base64");
+      dataMenu.file = `data:${req.file.mimetype};base64,${base64Image}`;
     }
     const menu = await Menu(dataMenu).save();
     res.send(menu);
   } catch (error) {
     // error
     console.log(error);
-    res.status(500).send("Server Error");
   }
 };
 
@@ -90,15 +91,9 @@ exports.update = async (req, res) => {
     const id = req.params.id;
     var newDataMenu = req.body;
 
-    if (typeof req.file !== "undefined") {
-      newDataMenu.file = req.file.filename;
-      await fs.unlink("./uploads/" + newDataMenu.fileole, (error) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Remove success");
-        }
-      });
+    if (req.file) {
+      const base64Image = req.file.buffer.toString("base64");
+      newDataMenu.file = `data:${req.file.mimetype};base64,${base64Image}`;
     }
     const menu = await Menu.findOneAndUpdate({ _id: id }, newDataMenu, {
       new: true,
@@ -118,15 +113,11 @@ exports.remove = async (req, res) => {
     const id = req.params.id;
     const menu = await Menu.findOneAndDelete({ _id: id }).exec();
 
-    if (menu?.file) {
-      await fs.unlink("./uploads/" + menu.file, (error) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Remove success");
-        }
-      });
+    if (req.file) {
+      const base64Image = req.file.buffer.toString("base64");
+      newDataMenu.file = `data:${req.file.mimetype};base64,${base64Image}`;
     }
+
     res.send(menu);
   } catch (error) {
     // error
