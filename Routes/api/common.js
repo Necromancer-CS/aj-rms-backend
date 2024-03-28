@@ -10,12 +10,23 @@ const { auth, adminCheck } = require("../../Middleware/auth");
 const { list, changeRole } = require("../../Controllers/user");
 
 const {
+  readCustomerBooking,
+  readQrCode,
+} = require("../../Controllers/CustomerBooking");
+
+const {
   salesMonthly,
   totalOpenDesk,
   totalPrice,
   topPackage,
   topMenu,
 } = require("../../Controllers/dashboard");
+
+const {
+  updateCheckPaymentCustomerBooking,
+} = require("../../Controllers/CustomerBooking");
+
+const { upload } = require("../../Middleware/upload");
 
 // http://localhost:5000/api/register
 router.get("/", (req, res) => res.send("Express on Vercel"));
@@ -32,5 +43,9 @@ router.get("/dashboard-totalOpenDesk", totalOpenDesk);
 router.get("/dashboard-totalPrice", totalPrice);
 router.get("/dashboard-topPackage", topPackage);
 router.get("/dashboard-topMenu", topMenu);
+
+router.put("/check-payment/:id", upload, updateCheckPaymentCustomerBooking);
+
+router.get("/qr-code/:id", readQrCode);
 
 module.exports = router;
