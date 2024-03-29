@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 // Controllers
-const { register, login, currentUser } = require("../../Controllers/auth");
+const { login, currentUser } = require("../../Controllers/auth");
+
 // Middleware
 const { auth, adminCheck } = require("../../Middleware/auth");
 
@@ -30,7 +31,6 @@ const { upload } = require("../../Middleware/upload");
 
 // http://localhost:5000/api/register
 router.get("/", (req, res) => res.send("Express on Vercel"));
-router.post("/register", register);
 router.post("/login", login);
 router.post("/current-user", auth, currentUser);
 router.post("/current-admin", auth, adminCheck, currentUser);

@@ -1,4 +1,4 @@
-const User = require("../Models/Users");
+const Admin = require("../Models/Admin");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { token } = require("morgan");
@@ -7,9 +7,11 @@ exports.login = async (req, res) => {
   try {
     //code
     // 1. Check User
-    const { email, password } = req.body;
-    var dataUser = await User.findOneAndUpdate({ email }, { new: true });
-    console.log(dataUser);
+    const { username, password } = req.body;
+    var dataUser = await Admin.findOneAndUpdate(
+      { username: username },
+      { new: true }
+    );
     if (dataUser) {
       const isMatch = await bcrypt.compare(password, dataUser.password);
 
@@ -17,23 +19,21 @@ exports.login = async (req, res) => {
         return res.status(400).send("Password Invalid!!!");
       }
       // 2. Payload
-      const user = {
+      const setData = {
         _id: dataUser._id,
-        name: dataUser.name,
-        email: dataUser.email,
-        firstname: dataUser.firstname,
-        lastname: dataUser.lastname,
+        fullName: dataUser.fullName,
         role: dataUser.role,
+        username: dataUser.username,
       };
 
       var payload = {
-        user,
+        setData,
       };
 
       // 3. Generate
       jwt.sign(payload, "jwtsecret", { expiresIn: "1d" }, (err, token) => {
         if (err) throw err;
-        res.json({ token, payload, user });
+        res.json({ token, payload, setData });
       });
     } else {
       return res.status(400).send("User not found!!!");
@@ -44,6 +44,7 @@ exports.login = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
+
 exports.currentUser = async (req, res) => {
   try {
     // code
