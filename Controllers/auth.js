@@ -3,34 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { token } = require("morgan");
 
-exports.register = async (req, res) => {
-  try {
-    //code
-    // 1.CheckUser
-    const { name, email, firstname, lastname, password } = req.body;
-    var dataUser = await User.findOne({ email });
-    if (dataUser) {
-      return res.send("User Already Exists!!!").status(400);
-    }
-    // 2.Encrypt
-    const salt = await bcrypt.genSalt(10);
-    dataRegister = new User({
-      name,
-      email,
-      firstname,
-      lastname,
-      password,
-    });
-    dataRegister.password = await bcrypt.hash(password, salt);
-    // 3.Save
-    await dataRegister.save();
-    res.send("Register Success!!");
-  } catch (err) {
-    //code
-    console.log(err);
-    res.status(500).send("Server Error");
-  }
-};
 exports.login = async (req, res) => {
   try {
     //code
