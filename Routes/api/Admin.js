@@ -12,8 +12,8 @@ const {
 //http://localhost:5000/api/admin
 router.get("/", list);
 router.get("/:id", read);
-router.post("/admin", create);
-router.put("/admin/:id", update);
-router.delete("/admin/:id", remove);
+router.post("/", create);
+router.put("/:id", update);
+router.delete("/:id", remove);
 
 module.exports = router;

@@ -49,7 +49,7 @@ exports.list = async (req, res) => {
     res.send(responseData);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server Error");
+    res.status(500).send("Server Errorr");
   }
 };
 
