@@ -31,13 +31,15 @@ app.use(
 );
 app.use("/api/menu", require("../Routes/api/menu"));
 app.use("/api/menu-control", require("../Routes/api/menuControl"));
+
+app.use("/api/desk", require("../Routes/api/Desk"));
+
 app.use("/api/order-customer", require("../Routes/api/OrderMenu"));
 app.use("/api/order-menu", require("../Routes/api/CustomerOrderMenu"));
 app.use(
   "/api/order-menu-control",
   require("../Routes/api/CustomerOrderMenuControl")
 );
-app.use("/api/desk", require("../Routes/api/Desk"));
 
 app.listen(5000, () => console.log("Server ready on port 5000."));
 
