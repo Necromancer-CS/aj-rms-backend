@@ -25,7 +25,7 @@ const customerBookingSchema = mongoose.Schema(
     },
     chanelPayment: {
       type: String,
-      default: "N",
+      default: "Money",
     },
     file: {
       type: String,

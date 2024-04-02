@@ -42,6 +42,7 @@ exports.list = async (req, res) => {
         menuPrice: menu.menuPrice,
         menuStatus: menu.menuStatus,
         menuType: menu.menuType,
+        file: menu.file,
         packageName: buffet.packageName,
       };
       responseData.push(responseDataItem);
