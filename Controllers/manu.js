@@ -14,6 +14,7 @@ exports.listPackageIdMenu = async (req, res) => {
     const checkPackage = await Menu.find({
       packageBufferId: packageBufferId,
     });
+
     res.send(checkPackage);
   } catch (error) {
     console.error(error);
