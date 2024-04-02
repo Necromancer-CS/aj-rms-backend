@@ -166,6 +166,7 @@ exports.readCustomerBooking = async (req, res) => {
       countChild: customerBooking.countChild,
       packageId: customerBooking.packageId,
       packageName: packageItem.packageName,
+      chanelPayment: customerBooking.chanelPayment,
       status: customerBooking.status,
       createdAt: customerBooking.createdAt,
       updatedAt: customerBooking.updatedAt,

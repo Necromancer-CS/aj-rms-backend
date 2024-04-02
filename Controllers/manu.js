@@ -14,6 +14,7 @@ exports.listPackageIdMenu = async (req, res) => {
     const checkPackage = await Menu.find({
       packageBufferId: packageBufferId,
     });
+
     res.send(checkPackage);
   } catch (error) {
     console.error(error);
@@ -42,6 +43,7 @@ exports.list = async (req, res) => {
         menuPrice: menu.menuPrice,
         menuStatus: menu.menuStatus,
         menuType: menu.menuType,
+        file: menu.file,
         packageName: buffet.packageName,
       };
       responseData.push(responseDataItem);
