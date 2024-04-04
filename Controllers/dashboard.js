@@ -24,7 +24,7 @@ exports.salesMonthly = async (req, res) => {
     res.send(monthlyTotal);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server Error");
+    res.status(500).send("Server Error1");
   }
 };
 
