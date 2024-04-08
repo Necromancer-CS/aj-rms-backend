@@ -16,8 +16,12 @@ const {
 } = require("../../Controllers/CustomerBooking");
 
 const {
-  salesMonthly,
-  totalOpenDesk,
+  totalPriceForDay,
+  totalPriceForWeek,
+  totalPriceForMonth,
+  totalPriceForYear,
+  totalPriceForMonthSegments,
+  packageSelectionInMonth,
   totalPrice,
   topPackage,
   topMenu,
@@ -38,8 +42,13 @@ router.post("/current-admin", auth, adminCheck, currentUser);
 router.get("/user", auth, adminCheck, list);
 router.post("/change-role", auth, adminCheck, changeRole);
 
-router.get("/dashboard-salesMonthly", salesMonthly);
-router.get("/dashboard-totalOpenDesk", totalOpenDesk);
+router.get("/dashboard-totalPriceForDay", totalPriceForDay);
+router.get("/dashboard-totalPriceForWeek", totalPriceForWeek);
+router.get("/dashboard-totalPriceForMonth", totalPriceForMonth);
+router.get("/dashboard-totalPriceForYear", totalPriceForYear);
+router.get("/dashboard-totalPriceForMonthSegments", totalPriceForMonthSegments);
+router.get("/dashboard-packageSelectionInMonth", packageSelectionInMonth);
+
 router.get("/dashboard-totalPrice", totalPrice);
 router.get("/dashboard-topPackage", topPackage);
 router.get("/dashboard-topMenu", topMenu);
