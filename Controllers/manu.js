@@ -4,18 +4,52 @@ const Buffet = require("../Models/Buffet");
 const fs = require("fs");
 const { text } = require("body-parser");
 
-//API สำหรับ UI ในส่วน Flow การทำงาน
+// //API สำหรับ UI ในส่วน Flow การทำงาน
+// exports.listPackageIdMenu = async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     const customerBooking = await CustomerBooking.findById(id).exec();
+//     const packageBufferId = customerBooking.packageId;
+
+//     const checkPackage = await Menu.find({
+//       packageBufferId: packageBufferId,
+//     });
+
+//     res.send(checkPackage);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Server Error");
+//   }
+// };
+
 exports.listPackageIdMenu = async (req, res) => {
   try {
     const id = req.params.id;
     const customerBooking = await CustomerBooking.findById(id).exec();
-    const packageBufferId = customerBooking.packageId;
+    const buffetId = customerBooking.packageId;
 
-    const checkPackage = await Menu.find({
-      packageBufferId: packageBufferId,
-    });
+    const buffet = await Buffet.findById(buffetId).exec();
+    const silverBuffet = await Buffet.findOne({ packageName: "Silver" }).exec();
 
-    res.send(checkPackage);
+    // ค้นหาเมนูทั้งหมดที่ตรงกับ buffetId ที่เลือก
+    const menusById = await Menu.find({ packageBufferId: buffetId }).exec();
+    const silverMenus = await Menu.find({
+      packageBufferId: silverBuffet._id,
+    }).exec();
+    const diamondMenus = await Menu.find({}).exec();
+
+    let filteredMenus = [];
+
+    // กรองเมนูตามเงื่อนไขที่กำหนด
+    if (buffet.packageName === "Silver") {
+      filteredMenus = menusById;
+    } else if (buffet.packageName === "Gold") {
+      filteredMenus = [...menusById, ...silverMenus];
+    } else if (buffet.packageName === "Diamond") {
+      filteredMenus = diamondMenus;
+    }
+
+    res.send(filteredMenus);
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
