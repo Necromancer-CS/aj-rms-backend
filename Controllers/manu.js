@@ -32,11 +32,15 @@ exports.listPackageIdMenu = async (req, res) => {
     const silverBuffet = await Buffet.findOne({ packageName: "Silver" }).exec();
 
     // ค้นหาเมนูทั้งหมดที่ตรงกับ buffetId ที่เลือก
-    const menusById = await Menu.find({ packageBufferId: buffetId }).exec();
+    const menusById = await Menu.find({
+      packageBufferId: buffetId,
+      menuStatus: "ready",
+    }).exec();
     const silverMenus = await Menu.find({
       packageBufferId: silverBuffet._id,
+      menuStatus: "ready",
     }).exec();
-    const diamondMenus = await Menu.find({}).exec();
+    const diamondMenus = await Menu.find({ menuStatus: "ready" }).exec();
 
     let filteredMenus = [];
 

@@ -167,6 +167,8 @@ exports.readCustomerBooking = async (req, res) => {
       packageId: customerBooking.packageId,
       packageName: packageItem.packageName,
       chanelPayment: customerBooking.chanelPayment,
+      userOpenTable: customerBooking.userOpenTable,
+      userBilling: customerBooking.userBilling,
       status: customerBooking.status,
       createdAt: customerBooking.createdAt,
       updatedAt: customerBooking.updatedAt,

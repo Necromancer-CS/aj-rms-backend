@@ -122,18 +122,37 @@ exports.updateStatusOrderMenu = async (req, res) => {
       { new: true }
     ).exec();
 
+    if (newStatusOrderMenu === "refuse") {
+      const menu = await Menu.findOneAndUpdate(
+        { _id: orderMenu.menuId },
+        { $set: { menuStatus: "notReady" } },
+        { new: true }
+      ).exec();
+
+      // สร้างข้อมูลที่จะส่งกลับไปยัง client พร้อมกับชื่อเมนู
+      const responseData = {
+        orderId: orderMenu._id,
+        menuName: menu.menuName,
+        status: orderMenu.status,
+        // เพิ่มข้อมูลอื่นๆ จาก OrderMenu ตามที่ต้องการ
+      };
+
+      res.send(responseData); // ส่งข้อมูลทั้งหมดกลับไปยัง client
+    } else {
+      const menu = await Menu.findOne({ _id: orderMenu.menuId }).exec();
+
+      // สร้างข้อมูลที่จะส่งกลับไปยัง client พร้อมกับชื่อเมนู
+      const responseData = {
+        orderId: orderMenu._id,
+        menuName: menu.menuName,
+        status: orderMenu.status,
+        // เพิ่มข้อมูลอื่นๆ จาก OrderMenu ตามที่ต้องการ
+      };
+
+      res.send(responseData); // ส่งข้อมูลทั้งหมดกลับไปยัง client
+    }
+
     // ค้นหาข้อมูลของเมนูที่เกี่ยวข้องด้วย menuId จาก OrderMenu
-    const menu = await Menu.findOne({ _id: orderMenu.menuId }).exec();
-
-    // สร้างข้อมูลที่จะส่งกลับไปยัง client พร้อมกับชื่อเมนู
-    const responseData = {
-      orderId: orderMenu._id,
-      menuName: menu.menuName,
-      status: orderMenu.status,
-      // เพิ่มข้อมูลอื่นๆ จาก OrderMenu ตามที่ต้องการ
-    };
-
-    res.send(responseData); // ส่งข้อมูลทั้งหมดกลับไปยัง client
   } catch (error) {
     console.log(error);
     res.status(500).send("Server Error");
