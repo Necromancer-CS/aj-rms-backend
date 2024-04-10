@@ -60,7 +60,12 @@ exports.updateBilling = async (req, res) => {
     const updateStatusCustomerBooking = "completed";
     await CustomerBooking.findOneAndUpdate(
       { _id: id },
-      { $set: { status: updateStatusCustomerBooking } },
+      {
+        $set: {
+          status: updateStatusCustomerBooking,
+          userBilling: newData.userBilling,
+        },
+      },
       { new: true }
     );
 

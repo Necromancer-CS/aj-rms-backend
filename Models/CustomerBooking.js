@@ -2,6 +2,14 @@ const mongoose = require("mongoose");
 
 const customerBookingSchema = mongoose.Schema(
   {
+    userOpenTable: {
+      type: String,
+      default: "userOpenTable",
+    },
+    userBilling: {
+      type: String,
+      default: "userBilling",
+    },
     qrLink: {
       type: String,
     },
