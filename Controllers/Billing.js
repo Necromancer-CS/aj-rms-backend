@@ -102,7 +102,7 @@ exports.list = async (req, res) => {
   } catch (error) {
     // error
     console.log(error);
-    res.status(500).send("Server Error");
+    res.status(500).send("Server Error ");
   }
 };
 
