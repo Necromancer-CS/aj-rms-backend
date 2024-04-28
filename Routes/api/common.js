@@ -52,9 +52,7 @@ router.get("/dashboard-packageSelectionInMonth", packageSelectionInMonth);
 router.get("/dashboard-totalPrice", totalPrice);
 router.get("/dashboard-topPackage", topPackage);
 router.get("/dashboard-topMenu", topMenu);
-
 router.put("/check-payment/:id", upload, updateCheckPaymentCustomerBooking);
-
 router.get("/qr-code/:id", readQrCode);
 
 module.exports = router;
