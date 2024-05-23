@@ -320,7 +320,6 @@ function getWeeksInMonth(month, year) {
 
   return weeks;
 }
-
 exports.packageSelectionInMonth = async (req, res) => {
   try {
     const startDate = new Date();
@@ -347,22 +346,21 @@ exports.packageSelectionInMonth = async (req, res) => {
       }
     });
 
-    // สร้าง array เพื่อเก็บข้อมูลของแพ็คเกจ
     const packagesData = [];
 
-    // วนลูปผ่านแต่ละแพ็คเกจใน packageSelections เพื่อสร้าง object ที่มีชื่อแพ็คเกจและจำนวนการเลือก
     for (const packageName in packageSelections) {
       const packagesItem = await Buffet.findOne({
         _id: packageName,
       });
 
-      packagesData.push({
-        packageName: packagesItem.packageName,
-        selectionCount: packageSelections[packageName],
-      });
+      if (packagesItem) {
+        packagesData.push({
+          packageName: packagesItem.packageName,
+          selectionCount: packageSelections[packageName],
+        });
+      }
     }
 
-    // ส่งข้อมูลกลับไปยัง client
     res.send(packagesData);
   } catch (error) {
     console.log(error);
