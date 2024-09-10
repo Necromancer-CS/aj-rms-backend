@@ -38,9 +38,7 @@ PAYLOAD
 }
 
 ```
-
 ## GET เรียกข้อมูล Package
-
 ```
 แสดงรายการข้อมูล Package
 ```
@@ -51,16 +49,14 @@ GET /buffet
 RESPONSE (RES)
 [
     {
-    "packageName"
-    "packagePrice"
+        "packageName"
+        "packagePrice"
     },
     {
-    "packageName"
-    "packagePrice"
+        "packageName"
+        "packagePrice"
     }
 ]
-
-
 ```
 
 ## GET เรียกข้อมูล Desk

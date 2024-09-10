@@ -256,114 +256,149 @@ exports.totalPriceForYear = async (req, res) => {
       percentageChange: parseFloat(percentageChangeYear.toFixed(2)),
     };
 
-    res.send(yearlyTotal);
+    const yearlyTotalNot = {
+      totalPriceThisYear: 0,
+      totalPriceLastYear: 0,
+      percentageChange: 0,
+    };
+    res.send(yearlyTotalNot);
+
+    // if (yearlyTotal) {
+    //   res.send(yearlyTotalNot);
+    // } else {
+    //   res.send(yearlyTotalNot);
+    // }
   } catch (error) {
     console.log(error);
     res.status(500).send("Server Error");
   }
 };
 
-exports.totalPriceForMonthSegments = async (req, res) => {
-  try {
-    const today = new Date();
-    const thisMonth = today.getMonth();
-    const thisYear = today.getFullYear();
-    const segments = [];
-    const weeksInMonth = getWeeksInMonth(thisMonth, thisYear);
+// exports.totalPriceForMonthSegments = async (req, res) => {
+//   try {
+//     const today = new Date();
+//     const thisMonth = today.getMonth();
+//     const thisYear = today.getFullYear();
+//     const segments = [];
+//     const weeksInMonth = getWeeksInMonth(thisMonth, thisYear);
 
-    for (let i = 0; i < weeksInMonth.length; i++) {
-      const weekStartDate = weeksInMonth[i][0];
-      const weekEndDate = weeksInMonth[i][1];
+//     for (let i = 0; i < weeksInMonth.length; i++) {
+//       const weekStartDate = weeksInMonth[i][0];
+//       const weekEndDate = weeksInMonth[i][1];
 
-      const billingsInWeek = await Billing.find({
-        isPaid: true,
-        createdAt: {
-          $gte: weekStartDate,
-          $lte: weekEndDate,
-        },
-      }).exec();
+//       const billingsInWeek = await Billing.find({
+//         isPaid: true,
+//         createdAt: {
+//           $gte: weekStartDate,
+//           $lte: weekEndDate,
+//         },
+//       }).exec();
 
-      let totalPriceInWeek = 0;
-      for (const billing of billingsInWeek) {
-        totalPriceInWeek += billing.totalPrice;
-      }
+//       let totalPriceInWeek = 0;
+//       for (const billing of billingsInWeek) {
+//         totalPriceInWeek += billing.totalPrice;
+//       }
 
-      segments.push({
-        weekStartDate: weekStartDate.toISOString(),
-        weekEndDate: weekEndDate.toISOString(),
-        totalPriceInWeek: parseFloat(totalPriceInWeek.toFixed(2)),
-      });
-    }
+//       segments.push({
+//         weekStartDate: weekStartDate.toISOString(),
+//         weekEndDate: weekEndDate.toISOString(),
+//         totalPriceInWeek: parseFloat(totalPriceInWeek.toFixed(2)),
+//       });
+//     }
 
-    res.send(segments);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Server Error");
-  }
-};
+//     const segmentsNot = {
+//       weekStartDate: 0,
+//       weekEndDate: 0,
+//       totalPriceInWeek: 0,
+//     };
 
-function getWeeksInMonth(month, year) {
-  const weeks = [];
-  const firstDate = new Date(year, month, 1);
-  const lastDate = new Date(year, month + 1, 0);
-  let startDate = firstDate;
-  let endDate = new Date(firstDate);
-  endDate.setDate(startDate.getDate() + 6 - startDate.getDay());
+//     if (segments) {
+//       res.send(segments);
+//     } else {
+//       res.send(segmentsNot);
+//     }
 
-  while (endDate <= lastDate) {
-    weeks.push([new Date(startDate), new Date(endDate)]);
-    startDate = new Date(endDate);
-    startDate.setDate(startDate.getDate() + 1);
-    endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 6 - startDate.getDay());
-  }
+//     res.send(segments);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send("Server Error");
+//   }
+// };
 
-  return weeks;
-}
-exports.packageSelectionInMonth = async (req, res) => {
-  try {
-    const startDate = new Date();
-    startDate.setDate(1);
-    const endDate = new Date(startDate);
-    endDate.setMonth(endDate.getMonth() + 1);
+// exports.packageSelectionInMonth = async (req, res) => {
+//   try {
+//     const startDate = new Date();
+//     startDate.setDate(1);
+//     const endDate = new Date(startDate);
+//     endDate.setMonth(endDate.getMonth() + 1);
 
-    const completedBookings = await CustomerBooking.find({
-      status: "completed",
-      createdAt: {
-        $gte: startDate,
-        $lt: endDate,
-      },
-    });
+//     const completedBookings = await CustomerBooking.find({
+//       status: "completed",
+//       createdAt: {
+//         $gte: startDate,
+//         $lt: endDate,
+//       },
+//     });
 
-    const packageSelections = {};
+//     const packageSelections = {};
 
-    completedBookings.forEach((booking) => {
-      const packageName = booking.packageId;
-      if (packageSelections[packageName]) {
-        packageSelections[packageName]++;
-      } else {
-        packageSelections[packageName] = 1;
-      }
-    });
+//     completedBookings.forEach((booking) => {
+//       const packageName = booking.packageId;
+//       if (packageSelections[packageName]) {
+//         packageSelections[packageName]++;
+//       } else {
+//         packageSelections[packageName] = 1;
+//       }
+//     });
 
-    const packagesData = [];
+//     const packagesData = [];
 
-    for (const packageName in packageSelections) {
-      const packagesItem = await Buffet.findOne({
-        _id: packageName,
-      });
+//     for (const packageName in packageSelections) {
+//       const packagesItem = await Buffet.findOne({
+//         _id: packageName,
+//       });
 
-      if (packagesItem) {
-        packagesData.push({
-          packageName: packagesItem.packageName,
-          selectionCount: packageSelections[packageName],
-        });
-      }
-    }
+//       if (packagesItem) {
+//         packagesData.push({
+//           packageName: packagesItem.packageName,
+//           selectionCount: packageSelections[packageName],
+//         });
+//       }
+//     }
 
-    res.send(packagesData);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Server Error");
-  }
-};
+//     const notPackagesData = {
+//       packageName: 0,
+//       selectionCount: 0,
+//     };
+
+//     res.send(notPackagesData);
+
+//     if (packagesData) {
+//       res.send(packagesData);
+//     } else {
+//       res.send(notPackagesData);
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send("Server Error");
+//   }
+// };
+
+// function getWeeksInMonth(month, year) {
+//   const weeks = [];
+//   const firstDate = new Date(year, month, 1);
+//   const lastDate = new Date(year, month + 1, 0);
+//   let startDate = firstDate;
+//   let endDate = new Date(firstDate);
+//   endDate.setDate(startDate.getDate() + 6 - startDate.getDay());
+
+//   while (endDate <= lastDate) {
+//     weeks.push([new Date(startDate), new Date(endDate)]);
+//     startDate = new Date(endDate);
+//     startDate.setDate(startDate.getDate() + 1);
+//     endDate = new Date(startDate);
+//     endDate.setDate(startDate.getDate() + 6 - startDate.getDay());
+//   }
+
+//   return weeks;
+// }
