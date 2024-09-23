@@ -209,7 +209,6 @@ exports.totalPriceForMonth = async (req, res) => {
 
 exports.totalPriceForYear = async (req, res) => {
   try {
-    // วันนี้
     const today = new Date();
     const startOfThisYear = new Date(today.getFullYear(), 0, 1);
     const endOfThisYear = new Date(today.getFullYear() + 1, 0, 0);
@@ -222,12 +221,11 @@ exports.totalPriceForYear = async (req, res) => {
       },
     }).exec();
 
-    let totalPriceThisYear = 0;
-    for (const billing of billingsThisYear) {
-      totalPriceThisYear += billing.totalPrice;
-    }
+    const totalPriceThisYear = billingsThisYear.reduce(
+      (total, billing) => total + billing.totalPrice,
+      0
+    );
 
-    // ปีที่แล้ว
     const startOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
     const endOfLastYear = new Date(today.getFullYear(), 0, 0);
 
@@ -239,16 +237,21 @@ exports.totalPriceForYear = async (req, res) => {
       },
     }).exec();
 
-    let totalPriceLastYear = 0;
-    for (const billing of billingsLastYear) {
-      totalPriceLastYear += billing.totalPrice;
-    }
+    const totalPriceLastYear = billingsLastYear.reduce(
+      (total, billing) => total + billing.totalPrice,
+      0
+    );
 
-    let percentageChangeYear = 0;
-    if (totalPriceLastYear !== 0) {
-      percentageChangeYear =
-        ((totalPriceThisYear - totalPriceLastYear) / totalPriceLastYear) * 100;
-    }
+    const percentageChangeYear =
+      totalPriceLastYear !== 0
+        ? ((totalPriceThisYear - totalPriceLastYear) / totalPriceLastYear) * 100
+        : totalPriceThisYear !== 0
+        ? 100
+        : 0;
+
+    console.log("Total Price This Year:", totalPriceThisYear);
+    console.log("Total Price Last Year:", totalPriceLastYear);
+    console.log("Percentage Change Year:", percentageChangeYear);
 
     const yearlyTotal = {
       totalPriceThisYear: parseFloat(totalPriceThisYear.toFixed(2)),
@@ -256,23 +259,79 @@ exports.totalPriceForYear = async (req, res) => {
       percentageChange: parseFloat(percentageChangeYear.toFixed(2)),
     };
 
-    const yearlyTotalNot = {
-      totalPriceThisYear: 0,
-      totalPriceLastYear: 0,
-      percentageChange: 0,
-    };
-    res.send(yearlyTotalNot);
-
-    // if (yearlyTotal) {
-    //   res.send(yearlyTotalNot);
-    // } else {
-    //   res.send(yearlyTotalNot);
-    // }
+    res.send(yearlyTotal);
   } catch (error) {
     console.log(error);
     res.status(500).send("Server Error");
   }
 };
+
+// exports.totalPriceForYear = async (req, res) => {
+//   try {
+//     // วันนี้
+//     const today = new Date();
+//     const startOfThisYear = new Date(today.getFullYear(), 0, 1);
+//     const endOfThisYear = new Date(today.getFullYear() + 1, 0, 0);
+
+//     const billingsThisYear = await Billing.find({
+//       isPaid: true,
+//       createdAt: {
+//         $gte: startOfThisYear,
+//         $lt: endOfThisYear,
+//       },
+//     }).exec();
+
+//     let totalPriceThisYear = 0;
+//     for (const billing of billingsThisYear) {
+//       totalPriceThisYear += billing.totalPrice;
+//     }
+
+//     // ปีที่แล้ว
+//     const startOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
+//     const endOfLastYear = new Date(today.getFullYear(), 0, 0);
+
+//     const billingsLastYear = await Billing.find({
+//       isPaid: true,
+//       createdAt: {
+//         $gte: startOfLastYear,
+//         $lt: endOfLastYear,
+//       },
+//     }).exec();
+
+//     let totalPriceLastYear = 0;
+//     for (const billing of billingsLastYear) {
+//       totalPriceLastYear += billing.totalPrice;
+//     }
+
+//     let percentageChangeYear = 0;
+//     if (totalPriceLastYear !== 0) {
+//       percentageChangeYear =
+//         ((totalPriceThisYear - totalPriceLastYear) / totalPriceLastYear) * 100;
+//     }
+
+//     const yearlyTotal = {
+//       totalPriceThisYear: parseFloat(totalPriceThisYear.toFixed(2)),
+//       totalPriceLastYear: parseFloat(totalPriceLastYear.toFixed(2)),
+//       percentageChange: parseFloat(percentageChangeYear.toFixed(2)),
+//     };
+
+//     const yearlyTotalNot = {
+//       totalPriceThisYear: 0,
+//       totalPriceLastYear: 0,
+//       percentageChange: 0,
+//     };
+
+//     if (yearlyTotal) {
+//       res.send(yearlyTotalNot);
+//     } else {
+//       res.send(yearlyTotalNot);
+//     }
+
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send("Server Error");
+//   }
+// };
 
 function getWeeksInMonth(month, year) {
   const weeks = [];
