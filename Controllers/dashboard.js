@@ -266,73 +266,6 @@ exports.totalPriceForYear = async (req, res) => {
   }
 };
 
-// exports.totalPriceForYear = async (req, res) => {
-//   try {
-//     // วันนี้
-//     const today = new Date();
-//     const startOfThisYear = new Date(today.getFullYear(), 0, 1);
-//     const endOfThisYear = new Date(today.getFullYear() + 1, 0, 0);
-
-//     const billingsThisYear = await Billing.find({
-//       isPaid: true,
-//       createdAt: {
-//         $gte: startOfThisYear,
-//         $lt: endOfThisYear,
-//       },
-//     }).exec();
-
-//     let totalPriceThisYear = 0;
-//     for (const billing of billingsThisYear) {
-//       totalPriceThisYear += billing.totalPrice;
-//     }
-
-//     // ปีที่แล้ว
-//     const startOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
-//     const endOfLastYear = new Date(today.getFullYear(), 0, 0);
-
-//     const billingsLastYear = await Billing.find({
-//       isPaid: true,
-//       createdAt: {
-//         $gte: startOfLastYear,
-//         $lt: endOfLastYear,
-//       },
-//     }).exec();
-
-//     let totalPriceLastYear = 0;
-//     for (const billing of billingsLastYear) {
-//       totalPriceLastYear += billing.totalPrice;
-//     }
-
-//     let percentageChangeYear = 0;
-//     if (totalPriceLastYear !== 0) {
-//       percentageChangeYear =
-//         ((totalPriceThisYear - totalPriceLastYear) / totalPriceLastYear) * 100;
-//     }
-
-//     const yearlyTotal = {
-//       totalPriceThisYear: parseFloat(totalPriceThisYear.toFixed(2)),
-//       totalPriceLastYear: parseFloat(totalPriceLastYear.toFixed(2)),
-//       percentageChange: parseFloat(percentageChangeYear.toFixed(2)),
-//     };
-
-//     const yearlyTotalNot = {
-//       totalPriceThisYear: 0,
-//       totalPriceLastYear: 0,
-//       percentageChange: 0,
-//     };
-
-//     if (yearlyTotal) {
-//       res.send(yearlyTotalNot);
-//     } else {
-//       res.send(yearlyTotalNot);
-//     }
-
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send("Server Error");
-//   }
-// };
-
 function getWeeksInMonth(month, year) {
   const weeks = [];
   let startDate = new Date(year, month, 1);
@@ -359,26 +292,37 @@ exports.totalPriceForMonthSegments = async (req, res) => {
     const weeksInMonth = getWeeksInMonth(thisMonth, thisYear);
 
     for (const [weekStartDate, weekEndDate] of weeksInMonth) {
+      // ปรับค่าให้เป็น 00:00:00 และ 23:59:59
+      const startOfWeek = new Date(weekStartDate);
+      startOfWeek.setHours(0, 0, 0, 0);
+
+      const endOfWeek = new Date(weekEndDate);
+      endOfWeek.setHours(23, 59, 59, 999);
+
       const billingsInWeek = await Billing.find({
         isPaid: true,
         createdAt: {
-          $gte: weekStartDate,
-          $lte: weekEndDate,
+          $gte: startOfWeek,
+          $lte: endOfWeek,
         },
       }).exec();
 
+      console.log(
+        `Bills found for ${startOfWeek.toISOString()} - ${endOfWeek.toISOString()}:`,
+        billingsInWeek.length
+      );
+
       const totalPriceInWeek = billingsInWeek.reduce(
-        (total, billing) => total + billing.totalPrice,
+        (total, billing) => total + (Number(billing.totalPrice) || 0),
         0
       );
 
       segments.push({
-        weekStartDate: weekStartDate.toISOString(),
-        weekEndDate: weekEndDate.toISOString(),
+        weekStartDate: startOfWeek.toISOString(),
+        weekEndDate: endOfWeek.toISOString(),
         totalPriceInWeek: parseFloat(totalPriceInWeek.toFixed(2)),
       });
     }
-
     res.send(segments);
   } catch (error) {
     console.log(error);
